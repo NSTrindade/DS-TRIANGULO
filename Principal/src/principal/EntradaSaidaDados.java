@@ -1,4 +1,4 @@
-package principalgui;
+package principal;
 
 import javax.swing.JOptionPane; 
 
