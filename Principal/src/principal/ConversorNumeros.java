@@ -1,35 +1,34 @@
-package principal;
+package principal; // Define que esta classe pertence ao pacote 'principal'
 
-/** 
- * Classe para converter Strings (textos) em números inteiros ou decimais.
- */ 
-public class ConversorNumeros { 
+import javax.swing.JOptionPane; // Importa a classe JOptionPane para exibir caixas de diálogo simples
 
-    
-    public int stringToInt(String numeroString) { 
-        if (numeroString == null || numeroString.trim().isEmpty()) {
-             System.err.println("Erro: Entrada nula ou vazia para conversão de inteiro."); 
-            return 0; // Retorna 0 para indicar erro/entrada inválida
+public class ConversorNumeros { // Declaração da classe pública ConversorNumeros
+
+    // Método público que converte uma String para um inteiro (int)
+    public int stringToInt(String numero) {
+        try { // Inicia um bloco try-catch para tratar possíveis erros de conversão
+            // Tenta converter a String 'numero' para um inteiro usando o método parseInt da classe Integer
+            return Integer.parseInt(numero);
+        } catch (NumberFormatException e) { // Captura a exceção NumberFormatException se a String não for um número inteiro válido
+            // Exibe uma mensagem de erro para o usuário usando JOptionPane
+            JOptionPane.showMessageDialog(null, "Erro: '" + numero + "' não é um inteiro válido.", "Erro de Conversão", JOptionPane.ERROR_MESSAGE);
+            // Retorna 0 como um valor padrão em caso de erro. Em um sistema mais robusto, poderia lançar uma exceção personalizada.
+            return 0;
         }
-        try { 
-            return Integer.parseInt(numeroString.trim()); 
-        } catch (NumberFormatException e) { 
-            System.err.println("Erro de conversão: '" + numeroString + "' não é um número inteiro válido."); 
-            return 0; // Retorna 0 para indicar erro
-        } 
-    } 
+    }
 
-    public double stringToDouble(String numeroString) { 
-         if (numeroString == null || numeroString.trim().isEmpty()) {
-             System.err.println("Erro: Entrada nula ou vazia para conversão de double."); 
-            return 0.0; // Retorna 0.0 para indicar erro/entrada inválida
+    // Método público que converte uma String para um número de ponto flutuante de precisão dupla (double)
+    public double stringToDouble(String numero) {
+        try { // Inicia um bloco try-catch para tratar possíveis erros de conversão
+            // Tenta converter a String 'numero' para um double.
+            // O método replace(",", ".") é usado para garantir que vírgulas (comuns em formatos numéricos brasileiros)
+            // sejam tratadas como pontos decimais, que é o esperado por Double.parseDouble.
+            return Double.parseDouble(numero.replace(",", "."));
+        } catch (NumberFormatException e) { // Captura a exceção NumberFormatException se a String não for um número double válido
+            // Exibe uma mensagem de erro para o usuário usando JOptionPane
+            JOptionPane.showMessageDialog(null, "Erro: '" + numero + "' não é um número válido.", "Erro de Conversão", JOptionPane.ERROR_MESSAGE);
+            // Retorna 0.0 como um valor padrão em caso de erro.
+            return 0.0;
         }
-        try { 
-            String numeroFormatado = numeroString.replace(',', '.').trim(); 
-            return Double.parseDouble(numeroFormatado); 
-        } catch (NumberFormatException e) { 
-            System.err.println("Erro de conversão: '" + numeroString + "' não é um número decimal válido."); 
-            return 0.0; // Retorna 0.0 para indicar erro
-        } 
-    } 
+    }
 }

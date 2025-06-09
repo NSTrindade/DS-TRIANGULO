@@ -1,63 +1,79 @@
-package principal;
+package principal; // Define que esta classe pertence ao pacote 'principal'
 
-/** 
- * Classe para representar os dados de um Triângulo.
- */ 
-public class Triangulo { 
+import java.io.Serializable; // Importa a interface Serializable para permitir que objetos desta classe sejam serializados (salvos em arquivo/transmitidos)
 
-    private double lado1; 
-    private double lado2; 
-    private double lado3; 
-    private String tipo; 
+public class Triangulo implements Serializable { // Declaração da classe pública Triangulo, que implementa a interface Serializable
+    // serialVersionUID é usado durante a desserialização para verificar se o remetente e o receptor de um objeto serializado
+    // carregaram classes para esse objeto que são compatíveis em relação à serialização.
+    private static final long serialVersionUID = 1L;
 
-    public Triangulo() { 
-        this.lado1 = 0; 
-        this.lado2 = 0; 
-        this.lado3 = 0; 
-        this.tipo = "Não cadastrado"; 
-    } 
+    // Atributos privados para armazenar os comprimentos dos três lados do triângulo
+    private double lado1;
+    private double lado2;
+    private double lado3;
+    // Atributo privado para armazenar o tipo do triângulo (ex: Equilátero, Isósceles, Escaleno)
+    private String tipo;
 
-    /** 
-     * Tenta definir os valores dos lados.
-     * @return true se os lados formarem um triângulo válido, false caso contrário. 
-     */ 
-    public boolean cadastrarLados(double l1, double l2, double l3) { 
-        boolean cond1 = (l1 + l2) > l3; 
-        boolean cond2 = (l1 + l3) > l2; 
-        boolean cond3 = (l2 + l3) > l1; 
-        boolean positivos = (l1 > 0 && l2 > 0 && l3 > 0); 
+    // Construtor padrão (sem argumentos). Útil para algumas frameworks ou quando a inicialização dos lados é feita depois.
+    public Triangulo() {}
 
-        if (positivos && cond1 && cond2 && cond3) { 
-            this.lado1 = l1; 
-            this.lado2 = l2; 
-            this.lado3 = l3; 
-            this.tipo = "Ainda não verificado"; 
-            return true; 
-        } else { 
-            this.lado1 = 0; 
-            this.lado2 = 0; 
-            this.lado3 = 0; 
-            this.tipo = "Inválido"; 
-            return false; 
-        } 
-    } 
+    // Construtor que recebe os três lados como argumentos e já os cadastra
+    public Triangulo(double lado1, double lado2, double lado3) {
+        // Chama o método cadastrarLados para definir e validar os lados
+        cadastrarLados(lado1, lado2, lado3);
+    }
 
-    // Getters
-    public double getLado1() { return lado1; } 
-    public double getLado2() { return lado2; } 
-    public double getLado3() { return lado3; } 
-    public String getTipo() { return tipo; } 
-    
-    // Setter
-    public void setTipo(String tipo) { 
-        this.tipo = tipo; 
-    } 
-    
-    /** 
-     * Verifica se os lados foram cadastrados e formam um triângulo válido.
-     * @return true se o triângulo tiver lados válidos (maiores que 0), false caso contrário. 
-     */ 
-    public boolean isValido() { 
-        return this.lado1 > 0 && this.lado2 > 0 && this.lado3 > 0; 
-    } 
+    // Método público para cadastrar (definir) os lados do triângulo e realizar validações
+    public void cadastrarLados(double lado1, double lado2, double lado3) {
+        // Verifica se algum dos lados é menor ou igual a zero
+        if (lado1 <= 0 || lado2 <= 0 || lado3 <= 0) {
+            // Se for, lança uma IllegalArgumentException informando que os lados devem ser positivos
+            throw new IllegalArgumentException("Os lados do triângulo devem ser positivos.");
+        }
+        // Verifica a condição de existência de um triângulo:
+        // a soma de quaisquer dois lados deve ser maior que o terceiro lado.
+        if (!((lado1 + lado2 > lado3) && (lado1 + lado3 > lado2) && (lado2 + lado3 > lado1))) {
+            // Se não formarem um triângulo, lança uma IllegalArgumentException
+            throw new IllegalArgumentException("Os lados fornecidos não formam um triângulo válido.");
+        }
+        // Se todas as validações passarem, atribui os valores aos atributos da classe
+        this.lado1 = lado1;
+        this.lado2 = lado2;
+        this.lado3 = lado3;
+        // Inicializa o tipo como null, pois ele será determinado posteriormente pela classe Verifica
+        this.tipo = null;
+    }
+
+    // Método getter público para retornar o valor do lado1
+    public double getLado1() {
+        return lado1;
+    }
+
+    // Método getter público para retornar o valor do lado2
+    public double getLado2() {
+        return lado2;
+    }
+
+    // Método getter público para retornar o valor do lado3
+    public double getLado3() {
+        return lado3;
+    }
+
+    // Método getter público para retornar o tipo do triângulo
+    public String getTipo() {
+        return tipo;
+    }
+
+    // Método setter público para definir o tipo do triângulo (geralmente chamado pela classe Verifica)
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    // Sobrescreve o método toString() da classe Object para fornecer uma representação em String do objeto Triangulo
+    @Override
+    public String toString() {
+        // Formata a string para exibir os lados com duas casas decimais
+        // Se o tipo do triângulo já foi definido, ele também é incluído na string
+        return String.format("Lados: %.2f, %.2f, %.2f", lado1, lado2, lado3) + (tipo != null ? " - Tipo: " + tipo : "");
+    }
 }
